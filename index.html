@@ -198,7 +198,7 @@
             <a href="images/my-cv.pdf" download class="btn btn2">Download CV</a>
           </div>
           <div class="contact-right">
-            <form>
+            <form name="submit-to-google-sheet">
               <input type="text" name="Name" placeholder="Your Name" required />
               <input
                 type="text"
@@ -213,6 +213,7 @@
               ></textarea>
               <button type="submit" class="btn btn2">Submit</button>
             </form>
+            <span id="msg"></span>
           </div>
         </div>
       </div>
@@ -241,17 +242,35 @@
     </script>
 
     <script>
+      var sidemenu = document.getElementById("sidemenu");
 
-        var sidemenu = document.getElementById("sidemenu");
-        
-        function openmenu(){
-            sidemenu.style.right = "0";
-        }
-        
-        function closemenu(){
-            sidemenu.style.right = "-200px";
-        }
+      function openmenu() {
+        sidemenu.style.right = "0";
+      }
 
+      function closemenu() {
+        sidemenu.style.right = "-200px";
+      }
+    </script>
+
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbwFB-vS9KhfHyb84B7Nxb7rs11Y9qdVGySs39zGW4davwlGGmQfE8aPUx592H9mW3ebZA/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      const msg = document.getElementById("msg");
+
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            msg.innerHTML = "Message sent successfully";
+            setTimeout((function(){
+               msg.innerHTML = "" 
+            }), 5000)
+            form.reset()
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
     </script>
   </body>
 </html>
